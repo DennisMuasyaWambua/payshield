@@ -1,0 +1,95 @@
+# Development Docker Compose
+# Usage: docker-compose -f docker-compose.dev.yml up
+version: '3.8'
+
+services:
+  # PostgreSQL Database (Development)
+  postgres:
+    image: postgres:15-alpine
+    container_name: payshield_postgres_dev
+    environment:
+      POSTGRES_DB: payshield_dev
+      POSTGRES_USER: payshield_user
+      POSTGRES_PASSWORD: payshield_password
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Redis Cache (Development)
+  redis:
+    image: redis:7-alpine
+    container_name: payshield_redis_dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_dev_data:/data
+
+  # Development Backend with hot reload
+  backend-dev:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: payshield_backend_dev
+    environment:
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - DATABASE_URL=postgresql://payshield_user:payshield_password@postgres:5432/payshield_dev
+      - REDIS_URL=redis://redis:6379
+      - API_SECRET_KEY=dev_secret_key_123
+      - JWT_SECRET=dev_jwt_secret_456
+      - BASE_SEPOLIA_RPC_URL=https://sepolia.base.org
+      - PRIVATE_KEY=${DEV_PRIVATE_KEY}
+      - PAYWALL_CORE_ADDRESS=${DEV_PAYWALL_CORE_ADDRESS}
+      - USDC_ADDRESS=${DEV_USDC_ADDRESS}
+      - ELEMENT_PAY_API_KEY=${DEV_ELEMENT_PAY_API_KEY}
+      - ELEMENT_PAY_API_SECRET=${DEV_ELEMENT_PAY_API_SECRET}
+      - ELEMENT_PAY_WEBHOOK_SECRET=${DEV_ELEMENT_PAY_WEBHOOK_SECRET}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    depends_on:
+      - postgres
+      - redis
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  # Development Frontend with hot reload
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: payshield_frontend_dev
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_BASE_CHAIN_ID=84532
+      - NEXT_PUBLIC_USDC_ADDRESS=${DEV_USDC_ADDRESS}
+      - NEXT_PUBLIC_PAYWALL_CORE_ADDRESS=${DEV_PAYWALL_CORE_ADDRESS}
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    depends_on:
+      - backend-dev
+
+  # Hardhat Node (Local blockchain for development)
+  hardhat-node:
+    build:
+      context: .
+      dockerfile: Dockerfile.hardhat
+    container_name: payshield_hardhat_node
+    ports:
+      - "8545:8545"
+    volumes:
+      - ./contracts:/app/contracts
+      - ./scripts:/app/scripts
+      - ./hardhat.config.ts:/app/hardhat.config.ts
+    command: ["npx", "hardhat", "node", "--hostname", "0.0.0.0"]
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
