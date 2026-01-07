@@ -442,7 +442,7 @@ describe("PaywallSubscriptions", function () {
           MAX_DEVICES,
           [1]
         )
-      ).to.be.revertedWith("Pausable: paused");
+      ).to.be.revertedWithCustomError(paywallSubscriptions, "EnforcedPause");
     });
   });
 

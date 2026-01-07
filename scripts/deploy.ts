@@ -33,7 +33,20 @@ async function main() {
     usdcAddress = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
   } else if (network.chainId === BigInt(84532)) {
     // Base Sepolia
-    usdcAddress = process.env.USDC_SEPOLIA_ADDRESS || "0x..."; // Deploy mock USDC if needed
+    usdcAddress = process.env.USDC_SEPOLIA_ADDRESS || "0x1234567890123456789012345678901234567890"; // Mock USDC for testnet
+  } else if (network.chainId === BigInt(31337) || network.chainId === BigInt(1337)) {
+    // Local development (Hardhat/Localhost)
+    console.log("🧪 Local development network detected. Deploying mock USDC...");
+    const MockERC20 = await ethers.getContractFactory("MockERC20");
+    const mockUSDC = await MockERC20.deploy("USD Coin", "USDC", 6);
+    await mockUSDC.waitForDeployment();
+    usdcAddress = await mockUSDC.getAddress();
+    
+    // Mint some USDC to deployer for testing
+    const mintAmount = ethers.parseUnits("1000000", 6); // 1M USDC
+    await mockUSDC.mint(deployer.address, mintAmount);
+    console.log("✅ Mock USDC deployed to:", usdcAddress);
+    console.log("✅ Minted", ethers.formatUnits(mintAmount, 6), "USDC to deployer\n");
   } else {
     throw new Error(`Unsupported network: ${network.chainId}`);
   }

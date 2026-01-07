@@ -172,7 +172,7 @@ contract DeviceAccessManager is AccessControl, Pausable {
             isBlacklisted: false,
             isActive: true,
             encryptedMetadata: encryptedMetadata,
-            lastFingerprintChange: 0
+            lastFingerprintChange: block.timestamp
         });
         
         userDevices[msg.sender].push(fingerprintHash);

@@ -325,7 +325,7 @@ describe("PaywallCore", function () {
           3,
           "QmTestHash"
         )
-      ).to.be.revertedWith("Pausable: paused");
+      ).to.be.revertedWithCustomError(paywallCore, "EnforcedPause");
     });
 
     it("Should allow admin to set platform fee", async function () {

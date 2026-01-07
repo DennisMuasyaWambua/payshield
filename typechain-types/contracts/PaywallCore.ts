@@ -119,6 +119,7 @@ export interface PaywallCoreInterface extends Interface {
       | "hasRole"
       | "pause"
       | "paused"
+      | "paymentHashToId"
       | "payments"
       | "platformFeeBps"
       | "recordAccess"
@@ -229,6 +230,10 @@ export interface PaywallCoreInterface extends Interface {
   ): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
   encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "paymentHashToId",
+    values: [BytesLike]
+  ): string;
   encodeFunctionData(functionFragment: "payments", values: [BytesLike]): string;
   encodeFunctionData(
     functionFragment: "platformFeeBps",
@@ -346,6 +351,10 @@ export interface PaywallCoreInterface extends Interface {
   decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "paymentHashToId",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "payments", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "platformFeeBps",
@@ -807,6 +816,8 @@ export interface PaywallCore extends BaseContract {
 
   paused: TypedContractMethod<[], [boolean], "view">;
 
+  paymentHashToId: TypedContractMethod<[arg0: BytesLike], [string], "view">;
+
   payments: TypedContractMethod<
     [arg0: BytesLike],
     [
@@ -1053,6 +1064,9 @@ export interface PaywallCore extends BaseContract {
   getFunction(
     nameOrSignature: "paused"
   ): TypedContractMethod<[], [boolean], "view">;
+  getFunction(
+    nameOrSignature: "paymentHashToId"
+  ): TypedContractMethod<[arg0: BytesLike], [string], "view">;
   getFunction(
     nameOrSignature: "payments"
   ): TypedContractMethod<

@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/home/dennis/Desktop/projects/payshield-protocol/contracts/DeviceAccessManager.sol": {
-      "lastModificationDate": 1766944743151,
-      "contentHash": "69bb9e9fb65218154b6647a6b0b7bf8a",
+      "lastModificationDate": 1767771138443,
+      "contentHash": "f572e31a503c13fc9674b2db33c700f2",
       "sourceName": "contracts/DeviceAccessManager.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -548,8 +548,8 @@
       ]
     },
     "/home/dennis/Desktop/projects/payshield-protocol/contracts/PaywallCore.sol": {
-      "lastModificationDate": 1766944538275,
-      "contentHash": "813b5fea4f0804ba0d7292a2bb7c7774",
+      "lastModificationDate": 1767770959224,
+      "contentHash": "57c54c2706e0d93ab1870801ba4b3bbf",
       "sourceName": "contracts/PaywallCore.sol",
       "solcConfig": {
         "version": "0.8.20",

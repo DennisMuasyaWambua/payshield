@@ -66,6 +66,7 @@ contract PaywallCore is ReentrancyGuard, AccessControl, Pausable {
     mapping(uint256 => mapping(bytes32 => bool)) public contentDeviceUsed;
     mapping(address => uint256[]) public creatorContent;
     mapping(uint256 => uint256) public contentDeviceCount;
+    mapping(bytes32 => bytes32) public paymentHashToId; // paymentHash => paymentId
     
     // Events
     event ContentRegistered(
@@ -178,6 +179,9 @@ contract PaywallCore is ReentrancyGuard, AccessControl, Pausable {
             refunded: false,
             deviceFingerprints: new bytes32[](0)
         });
+        
+        // Store mapping for efficient lookup
+        paymentHashToId[paymentHash] = paymentId;
         
         // Transfer USDC from payer (held in escrow until completion)
         require(
@@ -428,14 +432,6 @@ contract PaywallCore is ReentrancyGuard, AccessControl, Pausable {
      * @notice Find payment by hash (internal helper)
      */
     function findPaymentByHash(bytes32 paymentHash) internal view returns (bytes32) {
-        // In practice, this would need a more efficient lookup mechanism
-        // For now, simplified implementation
-        for (uint256 i = 1; i < nextPaymentId; i++) {
-            bytes32 testId = keccak256(abi.encodePacked(paymentHash, i));
-            if (payments[testId].paymentHash == paymentHash) {
-                return testId;
-            }
-        }
-        return bytes32(0);
+        return paymentHashToId[paymentHash];
     }
 }

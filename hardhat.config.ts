@@ -1,7 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-verify";
-import "hardhat-gas-reporter";
 import "solidity-coverage";
 import dotenv from "dotenv";
 
@@ -19,6 +18,14 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    // Local development network
+    hardhat: {
+      chainId: 31337
+    },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337
+    },
     // Base Sepolia Testnet
     "base-sepolia": {
       url: process.env.BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
@@ -55,10 +62,6 @@ const config: HardhatUserConfig = {
         },
       },
     ],
-  },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
   },
   paths: {
     sources: "./contracts",

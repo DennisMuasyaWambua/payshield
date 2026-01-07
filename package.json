@@ -11,21 +11,27 @@
     "verify": "hardhat verify --network",
     "node": "hardhat node"
   },
-  "keywords": ["paywall", "blockchain", "base", "usdc", "mpesa", "defi"],
+  "keywords": [
+    "paywall",
+    "blockchain",
+    "base",
+    "usdc",
+    "mpesa",
+    "defi"
+  ],
   "author": "PayShield Protocol",
   "license": "MIT",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@nomicfoundation/hardhat-verify": "^2.0.0",
     "@openzeppelin/contracts": "^5.0.0",
-    "hardhat": "^2.19.0",
-    "hardhat-gas-reporter": "^1.0.9",
-    "solidity-coverage": "^0.8.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0",
     "@types/mocha": "^10.0.0",
+    "@types/node": "^20.0.0",
     "chai": "^4.3.0",
-    "ethers": "^6.0.0"
+    "ethers": "^6.16.0",
+    "hardhat": "^2.19.0",
+    "solidity-coverage": "^0.8.0",
+    "typescript": "^5.0.0"
   },
   "dependencies": {
     "dotenv": "^16.0.0"
